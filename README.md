@@ -1,148 +1,186 @@
-# 🧬 CATE Calculator - H. pylori Eradication
+# CATE Calculator for H. pylori Eradication
 
-A modern, geek-style Streamlit application for calculating Conditional Average Treatment Effects (CATE) scores for H. pylori eradication treatment based on genetic profiles.
+A Streamlit web application for calculating Conditional Average Treatment Effects (CATE) scores for H. pylori eradication treatment based on individual genetic profiles.
 
-## 🚀 Features
+## Overview
 
-### 🧮 Single Prediction
-- **Interactive SNP Selection**: Choose genotypes for each SNP with a modern card-based interface
-- **Real-time Calculation**: Instant CATE score calculation with visual feedback
-- **Detailed Results**: Comprehensive breakdown of individual SNP contributions
-- **Beautiful Visualizations**: Modern gauge charts and result displays
+This tool provides personalized prediction of H. pylori eradication benefit for gastric cancer prevention using genetic markers. The application implements a genotype-specific calculator that assesses individualized treatment response based on 11 Single Nucleotide Polymorphisms (SNPs) and their associated conditional average treatment effects.
 
-### 📊 Batch Processing
-- **CSV Upload**: Process multiple individuals at once
-- **Template Download**: Get sample CSV templates for easy data preparation
-- **Results Export**: Download processed results as CSV
-- **Progress Tracking**: Visual progress indicators for batch operations
+## Features
 
-### 📈 Data Analysis
-- **SNP Overview**: Comprehensive statistics for all SNPs
-- **Chromosome Distribution**: Visual representation of SNP distribution across chromosomes
-- **Weight Analysis**: Statistical analysis of SNP weights and their distributions
-- **Gene Pathway Insights**: Analysis of SNPs by associated genes
+### Individual Prediction
+- Interactive SNP genotype selection interface
+- Real-time CATE score calculation
+- Comprehensive interpretation of results
+- Detailed SNP information display including chromosomal position, genes, and pathways
 
-## 🎨 Geek-Style UI Features
+### Batch Processing
+- CSV file upload for multiple sample processing
+- Automated score calculation for large datasets
+- Results export functionality
+- Sample template download
 
-- **Modern Gradient Design**: Beautiful color gradients and modern aesthetics
-- **Interactive Cards**: Hover effects and smooth animations
-- **Responsive Layout**: Optimized for all screen sizes
-- **Professional Typography**: Clean, readable fonts and spacing
-- **Visual Feedback**: Smooth transitions and hover effects
+### Scientific Accuracy
+- Evidence-based SNP weights from published research
+- Standardized genotype coding (homozygous reference, heterozygous, homozygous alternate)
+- Threshold-based interpretation (≥ 0.806 for highly beneficial response)
 
-## 🧬 SNP Data
+## Installation and Usage
 
-The app uses real SNP data extracted from `CATE_tables_0825.xlsx` with the following information:
-- **11 SNPs** across multiple chromosomes
-- **Genotype-specific weights** for REF, HET, and ALT alleles
-- **Gene associations** and chromosomal positions
-- **Clinical relevance** for H. pylori eradication treatment
-
-## 📋 Requirements
-
+### Prerequisites
 ```bash
+Python 3.8 or higher
+Required packages listed in requirements.txt
+```
+
+### Local Development
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+streamlit run streamlit_app.py
+
+# Access the application
+# Navigate to http://localhost:8501 in your web browser
+```
+
+### Cloud Deployment
+
+#### Streamlit Cloud (Recommended)
+1. Fork or clone this repository to your GitHub account
+2. Visit share.streamlit.io and sign in with GitHub
+3. Select "New app" and choose your repository
+4. Set main file path to streamlit_app.py
+5. Deploy the application
+
+#### Alternative Platforms
+- Heroku: Requires Procfile configuration
+- Railway: Direct GitHub integration available
+- Render: Free tier deployment supported
+
+## Technical Specifications
+
+### SNP Data
+The application utilizes 11 carefully selected SNPs across multiple chromosomes:
+- rs10762496 (Chr 10) - ANAPC16 gene, Cell cycle pathway
+- rs7894516 (Chr 10) - ANAPC16 gene, Cell cycle pathway
+- rs17773251 (Chr 13) - CSNK1A1L gene, Gastric cancer/Wnt signaling
+- rs9975448 (Chr 21) - IFNAR2 gene, PI3K-Akt signaling
+- rs368403298 (Chr 5) - MCC gene, Wnt signaling
+- rs877447 (Chr 17) - PRKCA gene, Multiple pathways
+- rs142784890 (Chr 3) - CACNA2D3 gene, MAPK signaling
+- rs4969266 (Chr 17) - RPTOR gene, PI3K-Akt signaling
+- rs7860304 (Chr 9) - TRAF2 gene, MAPK signaling
+- rs6887323 (Chr 5) - FGF18 gene, Multiple pathways
+- rs12806363 (Chr 11) - RPS6KA4 gene, MAPK signaling
+
+### Score Calculation
+```
+CATE Score = -Σ(SNP_weight[genotype] for each SNP)
+```
+
+### Genotype Encoding
+- 0: Homozygous for reference allele
+- 1: Heterozygous (one reference, one alternate allele)
+- 2: Homozygous for alternate allele
+
+### Interpretation Criteria
+- Scores ≥ 0.806: Highly beneficial predicted response to H. pylori eradication
+- Scores < 0.806: Moderately beneficial predicted response
+
+## Data Input Format
+
+### Single Prediction
+Use the web interface to select genotypes for each SNP through radio button controls.
+
+### Batch Processing
+Upload CSV files with the following structure:
+```csv
+ID,rs10762496,rs7894516,rs17773251,rs9975448,rs368403298,rs877447,rs142784890,rs4969266,rs7860304,rs6887323,rs12806363
+Sample1,0,1,2,1,0,1,2,0,1,2,1
+Sample2,1,0,1,2,1,0,1,2,0,1,2
+```
+
+## Scientific Background
+
+This tool implements research findings on host genetic profiles that enable personalized assessment of H. pylori eradication benefit for targeted gastric cancer prevention. The methodology is based on exploratory post-hoc analysis of randomized controlled trials examining the relationship between genetic variants and treatment response.
+
+### Important Considerations
+- This is a genotype-based benefit score derived from genetic markers
+- Population characteristics, clinical factors, and individual patient context should be considered for final decision making
+- This tool is intended for research purposes and professional interpretation
+- Clinical application requires institutional approval and validation
+
+## Use Cases
+
+### Clinical Research
+- Individualized treatment benefit assessment
+- Genetic association studies
+- Treatment response prediction modeling
+
+### Healthcare Applications
+- Patient-specific risk evaluation
+- Precision medicine implementation
+- Clinical decision support (with appropriate validation)
+
+### Academic Research
+- Population-level genetic analysis
+- Educational demonstrations of genetic treatment effects
+- Methodology validation studies
+
+## File Structure
+
+```
+Hello_CATE/
+├── streamlit_app.py          # Main application
+├── requirements.txt          # Python dependencies
+├── README.md                # Documentation
+├── .gitignore               # Git ignore rules
+└── kitty_icon.png           # Application icon
+```
+
+## Dependencies
+
+```
 streamlit>=1.28.0
 pandas>=2.0.0
 numpy>=1.24.0
-plotly>=5.0.0
-openpyxl>=3.0.0
 ```
 
-## 🚀 Installation & Usage
-
-### 1. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Run the Application
-```bash
-streamlit run streamlit_app.py
-```
-
-### 3. Access the App
-Open your browser and navigate to `http://localhost:8501`
-
-## 📁 File Structure
-
-```
-CATE_predict_streamlit/
-├── streamlit_app.py          # Main Streamlit application
-├── snps_data.json           # Extracted SNP data from Excel
-├── extract_snps.py          # Script to extract SNP data from Excel
-├── CATE_tables_0825.xlsx    # Original Excel data source
-├── requirements.txt          # Python dependencies
-├── README.md                # This documentation
-└── h_pylori_cate_sample.csv # Sample data template
-```
-
-## 🧬 How It Works
-
-### CATE Score Calculation
-The CATE score is calculated by summing the weighted contributions of each SNP based on the individual's genotype:
-
-```
-CATE Score = Σ(SNP_weight[genotype] for each SNP)
-```
-
-### Genotype Coding
-- **0 (REF)**: Homozygous reference allele
-- **1 (HET)**: Heterozygous (one reference, one alternate)
-- **2 (ALT)**: Homozygous alternate allele
-
-### Score Interpretation
-- **< -0.5**: Strong predicted benefit from H. pylori eradication 🟢
-- **-0.5 to 0**: Moderate predicted benefit from H. pylori eradication 🟡
-- **0 to 0.5**: Neutral predicted effect of H. pylori eradication 🟠
-- **> 0.5**: Limited predicted benefit from H. pylori eradication 🔴
-
-## 📊 Data Input Format
-
-### Single Prediction
-Use the interactive interface to select genotypes for each SNP.
-
-### Batch Processing
-Upload a CSV file with the following format:
-```csv
-ID,rs10762496,rs7894516,rs17773251,...
-Sample1,0,1,2,...
-Sample2,1,0,1,...
-```
-
-## 🔬 Scientific Background
-
-This tool assesses individualized benefits of H. pylori eradication for gastric cancer prevention using genetic profiles. Scores synthesize conditional average treatment effects (CATE) based on metaboQTLs from research studies.
-
-**Important**: This tool is intended for healthcare professionals. Use for research purposes requires institutional approval.
-
-## 🎯 Use Cases
-
-- **Clinical Research**: Individualized treatment benefit assessment
-- **Genetic Counseling**: Patient-specific risk evaluation
-- **Population Studies**: Large-scale genetic analysis
-- **Medical Education**: Understanding genetic treatment effects
-
-## 🚧 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
-1. **SNP data not loading**: Ensure `snps_data.json` exists and is properly formatted
-2. **Import errors**: Install all required dependencies with `pip install -r requirements.txt`
-3. **Port conflicts**: Use `--server.port` flag to specify a different port
+1. **Import errors**: Ensure all dependencies are installed using `pip install -r requirements.txt`
+2. **Port conflicts**: Specify alternative port using `streamlit run streamlit_app.py --server.port 8502`
+3. **File upload errors**: Verify CSV format matches the required structure
 
 ### Support
-For technical issues or questions about the application, please check the error logs or contact the development team.
+For technical issues or questions regarding the application functionality, please review the error logs or contact the development team.
 
-## 📄 License
+## License and Usage Rights
 
-© 2025 Peking University Cancer Hospital Department of Cancer Epidemiology. All rights reserved.
+© 2025 Peking University Cancer Hospital, Department of Cancer Epidemiology. All rights reserved.
 
-This tool is intended for healthcare professionals. Use for research purposes requires institutional approval.
+This application is intended for healthcare professionals and research purposes. Clinical application requires institutional approval and appropriate validation studies.
 
-## �� Updates
+## Version History
 
-- **v2.0**: Complete redesign with geek-style UI and enhanced functionality
-- **v1.0**: Basic CATE calculator functionality
+- **Version 2.0**: Enhanced interface with comprehensive SNP information display
+- **Version 1.0**: Basic CATE calculator implementation
+
+## Citation
+
+When using this tool for research purposes, please cite the associated manuscript:
+
+*Host genetic profiles enable personalized assessment on benefit of Helicobacter pylori eradication for targeted gastric cancer prevention: an exploratory post-hoc analysis of two randomized trials*
+
+## Contact Information
+
+For correspondence regarding this tool:
+- Wen-Qing Li: wenqing_li@bjmu.edu.cn
+- Kai-Feng Pan: pan-kf@263.net
 
 ---
 
-*Built with ❤️ using Streamlit, Plotly, and modern web technologies*
+Built using Streamlit framework with modern web technologies for scientific computing and data visualization.
