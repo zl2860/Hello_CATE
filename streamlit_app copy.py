@@ -49,8 +49,8 @@ st.markdown(
         </p>
         <p style="margin:0.6rem 0 0; font-size:0.85rem; line-height:1.3; opacity:0.9;">
             <b>For more information please see our manuscript:</b><br>
-            <i>Genetically determined heterogeneous treatment effects of <i>Helicobacter pylori</i> eradication
-            for targeted gastric cancer prevention: a post-hoc analysis of two randomized controlled trials</i>
+            <i>Host genetic profiles enable personalized assessment on benefit of <i><i>Helicobacter pylori</i></i> eradication
+            for targeted gastric cancer prevention: an exploratory post-hoc analysis of two randomized trials</i>
         </p>
         <p style="margin:1rem 0 0; font-size:0.85rem; line-height:1.4; opacity:0.95;">
             Zong-Chao Liu<sup>†,1</sup>, Yu-Xin Wang<sup>†,1</sup>, Heng-Min Xu<sup>†,1</sup>, 
@@ -115,11 +115,11 @@ with col_left:
     # Add genotype legend for clarity
     st.markdown("""
     <div style="background:#f0f9ff; border:1px solid #0ea5e9; border-radius:6px; padding:0.8rem; margin-bottom:1rem;">
-        <p style="margin:0; font-size:0.9rem; color:#0c4a6e; font-weight:600;">Genotype Selection Guide:</p>
+        <p style="margin:0; font-size:0.9rem; color:#0c4a6e; font-weight:600;">📋 Genotype Selection Guide:</p>
         <ul style="margin:0.3rem 0 0; font-size:0.8rem; color:#0c4a6e;">
             <li><b>Hom Ref</b> = Homozygous for the reference allele (e.g., A/A)</li>
-            <li><b>Heterozygous</b> = One reference + one alternate (effect) allele (e.g., A/G)</li>
-            <li><b>Hom Alt</b> = Homozygous for the alternate (effect) allele (e.g., G/G)</li>
+            <li><b>Heterozygous</b> = One reference + one alternate allele (e.g., A/G)</li>
+            <li><b>Hom Alt</b> = Homozygous for the alternate allele (e.g., G/G)</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -212,85 +212,6 @@ with col_right:
             "text/csv",
             use_container_width=True
         )
-
-        with st.expander("How to prepare a compatible CSV from PLINK"):
-            st.markdown("""
-- **Expected format**
-  - **ID**: sample identifier (use PLINK `IID`).
-  - One column per SNP (`rsID`): values must be **0/1/2 = ALT allele count**:
-    - **0**: Hom Ref (REF/REF)
-    - **1**: Heterozygous (REF/ALT)
-    - **2**: Hom Alt (ALT/ALT)
-
-- **Files for your run (download below)**
-  - `rsids.txt`: list of required rsIDs to extract.
-  - `alt_alleles.txt`: mapping of rsID to the ALT allele we expect (used to force ALT as A1).
-
-- **PLINK 1.9 (BED/BIM/FAM)**
-```bash
-plink --bfile your_data \
-  --extract rsids.txt \
-  --a1-allele alt_alleles.txt 2 1 \
-  --recode A \
-  --out cate
-```
-
-- **PLINK 2.0 (PGEN/VCF)**
-```bash
-# From PGEN
-plink2 --pfile your_data \
-  --extract rsids.txt \
-  --a1-allele alt_alleles.txt 2 1 \
-  --export A \
-  --out cate
-
-# Or directly from VCF
-plink2 --vcf your_data.vcf.gz \
-  --extract rsids.txt \
-  --a1-allele alt_alleles.txt 2 1 \
-  --export A \
-  --out cate
-```
-
-- **Convert PLINK .raw to the CSV this app expects**
-```bash
-python - <<'PY'
-import pandas as pd, re
-df = pd.read_csv('cate.raw', sep=r'\s+')
-df = df.rename(columns={'IID':'ID'})
-drop_cols = [c for c in ['FID','PAT','MAT','SEX','PHENOTYPE'] if c in df.columns]
-df = df.drop(columns=drop_cols)
-# Strip the trailing "_A1" PLINK adds to SNP columns
-df.columns = [re.sub(r'_A1$', '', c) for c in df.columns]
-df.to_csv('cate_for_streamlit.csv', index=False)
-print('Wrote cate_for_streamlit.csv')
-PY
-```
-
-- **Notes**
-  - We force PLINK’s A1 to equal our **ALT** allele via `--a1-allele`, so 0/1/2 = ALT allele count matches the app’s coding.
-  - Ensure the rsIDs in your data match those listed here; if missing, those rows must be completed before upload.
-  - The uploaded file must contain columns: `ID` and all listed rsIDs, with only values 0/1/2.
-""")
-
-            # Provide helper files for download
-            rsids_txt = "\n".join([s['rsid'] for s in snp_data]) + "\n"
-            alt_alleles_txt = "\n".join([f"{s['rsid']} {s['alt']}" for s in snp_data]) + "\n"
-
-            st.download_button(
-                "Download rsids.txt",
-                rsids_txt.encode("utf-8"),
-                file_name="rsids.txt",
-                mime="text/plain",
-                use_container_width=True
-            )
-            st.download_button(
-                "Download alt_alleles.txt",
-                alt_alleles_txt.encode("utf-8"),
-                file_name="alt_alleles.txt",
-                mime="text/plain",
-                use_container_width=True
-            )
 
 # ------------------- Footer -------------------
 st.markdown("""
